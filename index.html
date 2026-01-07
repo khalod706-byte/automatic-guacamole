@@ -1,243 +1,235 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>منيو السعادة — المذاق الأصلي</title>
-  <meta name="description" content="منيو السعادة — كريب، ميكسات الحريفة، برجر جامبو، وجبات، وركن الحلو — خدمة سريعة ونكهات أصلية." />
+import React, { useState } from 'react';
+import { Search, ShoppingBag, Menu, Flame, UtensilsCrossed, Sandwich, IceCream, Zap } from 'lucide-react';
 
-  <!-- Fonts & Tailwind CDN -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
-  <script>
-    tailwind = { config: { theme: { extend: { fontFamily: { tajawal: ["Tajawal", "sans-serif"] } } } } };
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
+const App = () => {
+    const [activeCategory, setActiveCategory] = useState('all');
+    const [searchTerm, setSearchTerm] = useState('');
 
-  <link rel="stylesheet" href="assets/styles.css" />
+    // Data Structure
+    const menuData = [
+        {
+            id: 'crepe',
+            title: 'كريب حادق',
+            icon: <UtensilsCrossed size={20} />,
+            items: [
+                { name: 'كريب استربس', price: 85, desc: '' },
+                { name: 'كريب سوبر كرانشي', price: 90, desc: '' },
+                { name: 'كريب زنجر سوبريم', price: 90, desc: '' },
+                { name: 'كريب صدور فراشة', price: 105, desc: '' },
+                { name: 'كريب مسحب', price: 120, desc: '' },
+                { name: 'كريب كوردن بلو', price: 80, desc: '' },
+                { name: 'كريب كرسبي', price: 50, desc: '' },
+                { name: 'كريب بانيه', price: 50, desc: '' },
+                { name: 'كريب هوت دوج', price: 70, desc: '' },
+                { name: 'كريب برجر فريش', price: 80, desc: '' },
+                { name: 'كريب كفته فريش', price: 85, desc: '' },
+                { name: 'كريب سجق', price: 80, desc: '' },
+                { name: 'كريب ميكس جبن', price: 50, desc: '' },
+                { name: 'كريب بطاطس', price: 35, desc: '' },
+            ]
+        },
+        {
+            id: 'mixes',
+            title: 'ميكسات ليفيك',
+            icon: <Flame size={20} />,
+            items: [
+                { name: 'كريب مقلبظ', price: 95, desc: '1 كوردن بلو + استربس + شاورما' },
+                { name: 'كريب موتة', price: 200, desc: '1 استربس + قطعة كوردن + صدور فراشة + شيش + مسحب + صوص شيدر ومايونيز' },
+                { name: 'كريب ولعتين', price: 100, desc: 'مسحب + استربس + مايونيز هوت صوص' },
+                { name: 'ميكس فراخ', price: 90, desc: 'بانيه + استربس + شاورما + تركي مدخن + صوص كاتشب مايونيز' },
+                { name: 'ميكس لحوم', price: 90, desc: 'سجق + كفته + برجر + بيف مدخن + صوص تكساس ومايونيز' },
+                { name: 'جبار', price: 100, desc: 'شيش + استربس + هوت دوج + بطاطس' },
+                { name: 'ثانوس', price: 130, desc: 'استربس + كوردن + شيش + 1 بطاطس' },
+                { name: 'وش المدفع', price: 100, desc: '1 هوت دوج + كفته + بانيه + استربس + وش جبنة' },
+                { name: 'لهاليبو', price: 100, desc: 'شيش تندوري + استربس' },
+            ]
+        },
+        {
+            id: 'jumbo',
+            title: 'برجر جامبو',
+            icon: <Menu size={20} />,
+            items: [
+                { name: 'برجر لحم', price: 120, desc: 'برجر + خضار + بيف مدخن + صوص تكساس' },
+                { name: 'برجر رينجو', price: 150, desc: 'برجر + حلقات بصل + صوابع موتزاريلا + خضار + صوص تكساس' },
+                { name: 'برجر دابل هيد شوت', price: 170, desc: 'برجر + تشيكن + تركي مدخن + صوابع موتزاريلا + خضار + تكساس + شيدر' },
+            ]
+        },
+        {
+            id: 'sandwich',
+            title: 'ساندوتشات',
+            icon: <Sandwich size={20} />,
+            items: [
+                { name: 'ساندوتش برجر', price: 40, desc: '' },
+                { name: 'ساندوتش هوت دوج', price: 40, desc: '' },
+                { name: 'ساندوتش استربس', price: 25, desc: '' },
+                { name: 'ساندوتش شيش', price: 35, desc: '' },
+                { name: 'ساندوتش بانيه', price: 20, desc: '' },
+                { name: 'ساندوتش كبده', price: 15, desc: '' },
+                { name: 'ساندوتش سجق', price: 15, desc: '' },
+                { name: 'ساندوتش كفته', price: 15, desc: '' },
+            ]
+        },
+        {
+            id: 'waffle',
+            title: 'وافل & حلو',
+            icon: <IceCream size={20} />,
+            items: [
+                { name: 'ساندوتش حلو اوريو', price: 35, desc: '' },
+                { name: 'واحد حلو', price: 50, desc: 'اوريو + لوتس + شوكليت + كراميل' },
+                { name: 'ساندوتش حلو لوتس', price: 35, desc: '' },
+                { name: 'وافل شوكلت', price: 30, desc: '' },
+                { name: 'وافل وايت شوكلت', price: 35, desc: '' },
+                { name: 'وافل ميكس شوكلت', price: 40, desc: '' },
+                { name: 'وافل اوريو', price: 50, desc: '' },
+                { name: 'وافل لورانا', price: 50, desc: '' },
+            ]
+        },
+        {
+            id: 'meals',
+            title: 'وجبات',
+            icon: <ShoppingBag size={20} />,
+            items: [
+                { name: 'وجبة استربس', price: 100, desc: 'استربس + بطاطس + كيزر + صوص شيدر' },
+                { name: 'وجبة صدور فراشة', price: 120, desc: 'صدور فراشة + بطاطس + كيزر + صوص شيدر' },
+                { name: 'وجبة مسحب', price: 125, desc: 'مسحب + بطاطس + كيزر + صوص شيدر' },
+            ]
+        },
+        {
+            id: 'addons',
+            title: 'اضافات',
+            icon: <Zap size={20} />,
+            items: [
+                { name: 'باكت فارم', price: 15, desc: '' },
+                { name: 'صوص شيدر', price: 15, desc: '' },
+                { name: 'صوص تكساس', price: 15, desc: '' },
+            ]
+        }
+    ];
 
-  <!-- Structured data (basic) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "name": "منيو السعادة",
-    "servesCuisine": "مصرية",
-    "telephone": "+20 100 000 0000",
-    "hasMenu": {
-      "@type": "Menu",
-      "name": "قائمة منيو السعادة"
-    }
-  }
-  </script>
-</head>
-<body class="bg-slate-50 font-tajawal text-gray-900">
+    const filteredData = menuData.map(category => {
+        const filteredItems = category.items.filter(item => 
+            item.name.includes(searchTerm) || 
+            (item.desc && item.desc.includes(searchTerm))
+        );
+        return { ...category, items: filteredItems };
+    }).filter(category => category.items.length > 0);
 
-  <!-- Header / Hero -->
-  <header class="bg-white shadow sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="https://images.unsplash.com/photo-1606756798835-7c9f3f3a2e86?q=80&w=80&auto=format&fit=crop&crop=faces" alt="لوغو منيو السعادة" class="w-12 h-12 rounded-md object-cover" />
-        <div>
-          <h1 class="text-2xl font-extrabold text-amber-600">🌯 منيو السعادة</h1>
-          <p class="text-xs text-gray-500">المذاق الأصلي — توصيل سريع</p>
+    const scrollToSection = (id) => {
+        setActiveCategory(id);
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-900 text-slate-100 font-sans pb-20" dir="rtl">
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap');
+                body { font-family: 'Cairo', sans-serif; }
+                .hide-scrollbar::-webkit-scrollbar { display: none; }
+                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            `}</style>
+
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 shadow-lg">
+                <div className="container mx-auto px-4 py-4">
+                    <div className="flex justify-between items-center mb-4">
+                        <div>
+                            <h1 className="text-3xl font-black text-orange-500 tracking-tighter">LIVIK</h1>
+                            <p className="text-xs text-slate-400 font-bold tracking-widest">RESTAURANT</p>
+                        </div>
+                        <div className="bg-orange-500/10 p-2 rounded-full">
+                            <Flame className="text-orange-500 animate-pulse" />
+                        </div>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="relative">
+                        <Search className="absolute right-3 top-3 text-slate-400" size={18} />
+                        <input 
+                            type="text"
+                            placeholder="بتدور على ايه؟ (برجر، كريب...)"
+                            className="w-full bg-slate-800 text-white p-3 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 border border-slate-700 transition-all placeholder-slate-500 text-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* Categories Nav */}
+                <div className="flex overflow-x-auto hide-scrollbar px-4 pb-3 gap-3">
+                    {menuData.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => scrollToSection(cat.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap text-sm font-bold transition-all
+                                ${activeCategory === cat.id 
+                                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' 
+                                    : 'bg-slate-800 text-slate-300 border border-slate-700'}`}
+                        >
+                            {cat.icon}
+                            {cat.title}
+                        </button>
+                    ))}
+                </div>
+            </header>
+
+            {/* Menu Content */}
+            <main className="container mx-auto px-4 pt-6 space-y-8">
+                {filteredData.length === 0 ? (
+                    <div className="text-center text-slate-500 py-20">
+                        <Search size={48} className="mx-auto mb-4 opacity-50" />
+                        <p>مفيش حاجة بالاسم ده يا بطل</p>
+                    </div>
+                ) : (
+                    filteredData.map((category) => (
+                        <section key={category.id} id={category.id} className="scroll-mt-40">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-orange-500/10 rounded-lg text-orange-500">
+                                    {category.icon}
+                                </div>
+                                <h2 className="text-xl font-bold text-white border-b-2 border-orange-500 pb-1">{category.title}</h2>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {category.items.map((item, index) => (
+                                    <div key={index} className="group bg-slate-800 rounded-2xl p-4 border border-slate-700/50 relative overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                        {/* Decorative background element */}
+                                        <div className="absolute -right-6 -top-6 w-20 h-20 bg-orange-500/5 rounded-full blur-xl group-hover:bg-orange-500/10 transition-all"></div>
+                                        
+                                        <div className="flex justify-between items-start gap-4 relative z-10">
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-bold text-slate-100 mb-1">{item.name}</h3>
+                                                {item.desc && (
+                                                    <p className="text-xs text-slate-400 leading-relaxed mb-2">{item.desc}</p>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-orange-400 font-black text-lg">{item.price}</span>
+                                                <span className="text-[10px] text-slate-500 font-bold uppercase">جنية</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    ))
+                )}
+            </main>
+
+            {/* Footer */}
+            <footer className="mt-12 bg-slate-950 py-8 border-t border-slate-800 text-center">
+                <h2 className="text-2xl font-black text-slate-700 mb-2">LIVIK</h2>
+                <p className="text-slate-500 text-sm mb-4">أقوى طعم في الزون</p>
+                <div className="flex justify-center gap-4 text-slate-600">
+                    <span>📞 010303504032</span>
+                    <span>🛵 تيك اواي</span>
+                    <span>🍽️ صالة</span>
+                </div>
+            </footer>
         </div>
-      </div>
+    );
+};
 
-      <nav class="hidden md:flex items-center gap-3">
-        <a class="px-3 py-1 rounded-lg text-sm bg-amber-500 text-white" href="#crepe">كريب</a>
-        <a class="px-3 py-1 rounded-lg text-sm bg-red-500 text-white" href="#mixes">ميكسات</a>
-        <a class="px-3 py-1 rounded-lg text-sm bg-orange-600 text-white" href="#burger">برجر</a>
-        <a class="px-3 py-1 rounded-lg text-sm bg-green-600 text-white" href="#meals">وجبات</a>
-        <a class="px-3 py-1 rounded-lg text-sm bg-pink-500 text-white" href="#sweet">حلو</a>
-      </nav>
-
-      <button id="mobileMenuBtn" class="md:hidden p-2 rounded focus-ring" aria-label="قائمة">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" class="stroke-amber-600"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-    </div>
-
-    <!-- Mobile Nav -->
-    <div id="mobileNav" class="md:hidden hidden border-t bg-white">
-      <div class="px-4 py-3 flex flex-col gap-2">
-        <a class="px-3 py-2 rounded-lg bg-amber-500 text-white text-center" href="#crepe">كريب</a>
-        <a class="px-3 py-2 rounded-lg bg-red-500 text-white text-center" href="#mixes">ميكسات الحريفة</a>
-        <a class="px-3 py-2 rounded-lg bg-orange-600 text-white text-center" href="#burger">برجر جامبو</a>
-        <a class="px-3 py-2 rounded-lg bg-green-600 text-white text-center" href="#meals">وجبات</a>
-        <a class="px-3 py-2 rounded-lg bg-pink-500 text-white text-center" href="#sweet">ركن الحلو</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-5xl mx-auto px-4 py-8 space-y-10">
-
-    <!-- Intro / CTA -->
-    <section class="grid md:grid-cols-2 gap-6 items-center">
-      <div>
-        <h2 class="text-3xl font-extrabold mb-2">تذوق السعادة — نكهة لا تُنسى</h2>
-        <p class="text-gray-600 mb-4">كريب أصلي، ميكسات حريفة، برجر جامبو ووصفات تحلى يومك. متاح التوصيل والاستلام من الفرع.</p>
-        <div class="flex gap-3">
-          <a href="#menu" class="bg-amber-600 text-white px-4 py-2 rounded-lg">اطلب الآن</a>
-          <a href="#contact" class="border border-amber-600 text-amber-600 px-4 py-2 rounded-lg">اتصل / احجز</a>
-        </div>
-      </div>
-
-      <div class="rounded-xl overflow-hidden shadow-lg">
-        <img src="https://images.unsplash.com/photo-1601050690596-3220e87bb24b?q=80&w=1200&auto=format&fit=crop" alt="صورة أطعمة" class="w-full h-56 object-cover" />
-      </div>
-    </section>
-
-    <!-- Menu (قائمة منيو السعادة) -->
-    <section id="menu" aria-labelledby="menu-title">
-      <h3 id="menu-title" class="text-2xl font-bold mb-4">القائمة</h3>
-
-      <!-- Mixes -->
-      <div id="mixes" class="mb-6">
-        <h4 class="text-xl font-bold text-red-600 mb-3">🔥 ميكسات الحريفة</h4>
-        <div class="grid md:grid-cols-2 gap-4">
-          <article class="bg-white p-4 rounded-2xl shadow category-card">
-            <div class="flex justify-between items-start">
-              <div>
-                <h5 class="font-extrabold">كريب موته 💀</h5>
-                <p class="text-sm text-gray-500">(استربس + كوردن + صدور فراشة + شيش + مسحب + صوص شيدر ومايونيز)</p>
-              </div>
-              <div class="text-amber-600 font-bold">200 ج.م</div>
-            </div>
-          </article>
-
-          <article class="bg-white p-4 rounded-2xl shadow">
-            <div class="flex justify-between items-start">
-              <div>
-                <h5 class="font-bold">ثانوس 🥊</h5>
-                <p class="text-sm text-gray-500">(استربس + كوردن + شيش + بطاطس)</p>
-              </div>
-              <div class="text-red-600 font-bold">130 ج.م</div>
-            </div>
-          </article>
-
-          <article class="bg-white p-4 rounded-2xl shadow">
-            <div class="flex justify-between items-start">
-              <div>
-                <h5 class="font-bold">جبار 💪</h5>
-                <p class="text-sm text-gray-500">(شيش + استربس + هوت دوج + بطاطس)</p>
-              </div>
-              <div class="text-red-600 font-bold">100 ج.م</div>
-            </div>
-          </article>
-
-          <article class="bg-white p-4 rounded-2xl shadow">
-            <div class="flex justify-between items-start">
-              <div>
-                <h5 class="font-bold">كريب ولعتين 🌶️</h5>
-                <p class="text-sm text-gray-500">(مسحب + استربس + مايونيز + هوت صوص)</p>
-              </div>
-              <div class="text-red-600 font-bold">90 ج.م</div>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <!-- Crepes -->
-      <div id="crepe" class="mb-6">
-        <h4 class="text-xl font-bold text-amber-600 mb-3">🍕 ركن الكريب</h4>
-        <div class="bg-white rounded-2xl border p-1">
-          <ul class="divide-y">
-            <li class="flex justify-between p-4"><div><strong>كريب صدور فراشة 🦋</strong><div class="text-xs text-gray-400">ملكي - الطعم الأصلي</div></div><div class="font-bold text-amber-600">105 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب مسحب</strong><div class="font-bold text-amber-600">105 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب سوبر كرانشي</strong><div class="font-bold text-amber-600">80 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب زنجر سوبريم</strong><div class="font-bold text-amber-600">80 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب كوردن بلو</strong><div class="font-bold text-amber-600">80 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب استربس</strong><div class="font-bold text-amber-600">70 ج.م</div></li>
-            <li class="flex justify-between p-4"><strong>كريب ميكس جبن</strong><div class="font-bold text-amber-600">50 ج.م</div></li>
-            <li class="flex justify-between p-4 bg-gray-50"><strong>كريب بطاطس 🍟</strong><div class="font-bold text-amber-600">35 ج.م</div></li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Burger -->
-      <div id="burger" class="mb-6">
-        <h4 class="text-xl font-bold text-orange-700 mb-3">🍔 قسم البرجر الجامبو</h4>
-        <div class="grid md:grid-cols-2 gap-4">
-          <article class="bg-orange-50 p-4 rounded-2xl">
-            <h5 class="font-extrabold">دابل هيد شوت 🎯</h5>
-            <p class="text-sm text-orange-700">برجر + تشيكن + تركي مدخن + صوابع موزاريلا + صوص تكساس + شيدر</p>
-            <div class="mt-2 font-bold bg-orange-600 text-white inline-block px-3 py-1 rounded-lg">170 ج.م</div>
-          </article>
-
-          <article class="bg-white p-4 rounded-2xl shadow">
-            <div class="flex justify-between items-center">
-              <h5 class="font-bold">برجر رينجو 🧅</h5>
-              <div class="text-orange-600 font-bold">150 ج.م</div>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <!-- Meals -->
-      <div id="meals" class="mb-6">
-        <h4 class="text-xl font-bold text-green-700 mb-3">🍱 وجبات (مع بطاطس + كيزر + صوص شيدر)</h4>
-        <div class="grid sm:grid-cols-3 gap-3">
-          <div class="bg-green-50 p-4 rounded-lg text-center"><div class="text-xs text-green-600 font-bold">وجبة</div><div class="font-bold">مسحب</div><div class="font-black text-green-700 mt-2">120 ج.م</div></div>
-          <div class="bg-green-50 p-4 rounded-lg text-center"><div class="text-xs text-green-600 font-bold">وجبة</div><div class="font-bold">صدور فراشة</div><div class="font-black text-green-700 mt-2">110 ج.م</div></div>
-          <div class="bg-green-50 p-4 rounded-lg text-center"><div class="text-xs text-green-600 font-bold">وجبة</div><div class="font-bold">استربس</div><div class="font-black text-green-700 mt-2">100 ج.م</div></div>
-        </div>
-      </div>
-
-      <!-- Sweet -->
-      <div id="sweet" class="mb-6">
-        <h4 class="text-xl font-bold text-pink-600 mb-3">🧇 ركن الحلو</h4>
-        <div class="bg-white p-4 rounded-2xl shadow">
-          <div class="flex justify-between items-center mb-3 bg-pink-50 p-3 rounded-lg"><strong class="text-pink-800">واحد حلو ميكس ✨</strong><div class="font-bold">50 ج.م</div></div>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="border p-3 rounded-lg flex justify-between items-center"><span>وافل أوريو</span><strong class="text-pink-600">50</strong></div>
-            <div class="border p-3 rounded-lg flex justify-between items-center"><span>وافل ميكس</span><strong class="text-pink-600">40</strong></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="bg-white p-6 rounded-2xl shadow">
-      <h4 class="text-xl font-bold mb-3">📞 احجز أو اطلب</h4>
-
-      <div class="grid md:grid-cols-2 gap-4">
-        <div>
-          <p class="text-gray-600 mb-3">للطلب أو الاستفسار اتصل أو ابعث رسالة واتساب:</p>
-          <ul class="space-y-2 text-sm">
-            <li><strong>هاتف:</strong> <a href="tel:+201000000000" class="text-amber-600">+20 100 000 0000</a></li>
-            <li><strong>واتساب:</strong> <a href="https://wa.me/201000000000" target="_blank" class="text-amber-600">اضغط للدردشة</a></li>
-            <li><strong>العنوان:</strong> فرع القاهرة — شارع المثال</li>
-          </ul>
-        </div>
-
-        <form id="contactForm" class="space-y-3" action="mailto:orders@example.com" method="post" enctype="text/plain">
-          <label class="block">
-            <span class="text-sm">الاسم</span>
-            <input required name="name" class="mt-1 block w-full border rounded-md px-3 py-2 focus-ring" />
-          </label>
-
-          <label class="block">
-            <span class="text-sm">رسالة / ملاحظات</span>
-            <textarea required name="message" rows="4" class="mt-1 block w-full border rounded-md px-3 py-2 focus-ring"></textarea>
-          </label>
-
-          <div class="flex gap-2">
-            <button type="submit" class="bg-amber-600 text-white px-4 py-2 rounded-lg">أرسل</button>
-            <button type="button" id="clearBtn" class="border px-4 py-2 rounded-lg">مسح</button>
-          </div>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <!-- Mobile footer quick actions -->
-  <footer class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex justify-around items-center shadow-lg lg:hidden">
-    <a href="#menu" class="flex flex-col items-center text-amber-600"><span class="text-xl">🍽️</span><span class="text-xs">القائمة</span></a>
-    <a href="tel:+201000000000" class="flex flex-col items-center text-gray-700"><span class="text-xl">📞</span><span class="text-xs">اتصل</span></a>
-    <a href="https://wa.me/201000000000" target="_blank" class="flex flex-col items-center text-green-600"><span class="text-xl">💬</span><span class="text-xs">واتساب</span></a>
-  </footer>
-
-  <script src="assets/script.js"></script>
-</body>
-</html>
+export default App;
